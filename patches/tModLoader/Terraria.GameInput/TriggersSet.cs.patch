@@ -1,0 +1,23 @@
+--- src/Terraria\Terraria.GameInput\TriggersSet.cs
++++ src/tModLoader\Terraria.GameInput\TriggersSet.cs
+@@ -636,6 +_,10 @@
+ 			foreach (string current in PlayerInput.KnownTriggers)
+ 			{
+ 				this.KeyStatus.Add(current, false);
++			}
++			foreach (var current in ModLoader.ModLoader.modHotKeys)
++			{
++				this.KeyStatus.Add(current.Value.displayName, false);
+ 			}
+ 		}
+ 
+@@ -713,6 +_,8 @@
+ 			{
+ 				this.HotbarScrollCD--;
+ 			}
++			ModLoader.ModHooks.HotKeyPressed();
++			ModLoader.PlayerHooks.ProcessTriggers(p, this);
+ 		}
+ 
+ 		public void CopyIntoDuringChat(Player p)
+

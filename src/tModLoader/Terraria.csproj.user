@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindowsDebug|x86'">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\Vednix\Desktop\TMODLOADER PORRA BIRRL 666\Terraria\tModLoaderDebug.exe</StartProgram>
+    <StartWorkingDirectory>C:\Users\Vednix\Desktop\TMODLOADER PORRA BIRRL 666\Terraria</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindowsServerDebug|x86'">
+    <StartAction>Project</StartAction>
+    <StartProgram>C:\Users\Administrator\Desktop\src\sourcetmod\src\tModLoader\bin\x86\WindowsServerDebug\Terraria.exe</StartProgram>
+    <StartWorkingDirectory>C:\</StartWorkingDirectory>
+  </PropertyGroup>
+</Project>

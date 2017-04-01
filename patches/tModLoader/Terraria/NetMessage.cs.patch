@@ -1,0 +1,242 @@
+--- src/Terraria\Terraria\NetMessage.cs
++++ src/tModLoader\Terraria\NetMessage.cs
+@@ -11,13 +_,15 @@
+ using Terraria.Localization;
+ using Terraria.Net.Sockets;
+ using Terraria.Social;
++using Terraria.ModLoader;
++using Terraria.ModLoader.IO;
+ 
+ namespace Terraria
+ {
+ 	public class NetMessage
+ 	{
+ 		public static MessageBuffer[] buffer = new MessageBuffer[257];
+-		private static PlayerDeathReason _currentPlayerDeathReason;
++		public static PlayerDeathReason _currentPlayerDeathReason;
+ 
+ 		public static void SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0, int number6 = 0, int number7 = 0)
+ 		{
+@@ -29,6 +_,10 @@
+ 			if (Main.netMode == 2 && remoteClient >= 0)
+ 			{
+ 				num = remoteClient;
++			}
++			if (ModNet.HijackSendData(num, msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7))
++			{
++				return;
+ 			}
+ 			lock (NetMessage.buffer[num])
+ 			{
+@@ -45,7 +_,7 @@
+ 				switch (msgType)
+ 				{
+ 					case 1:
+-						writer.Write("Terraria" + 188);
++						writer.Write(ModLoader.ModLoader.versionedName);
+ 						break;
+ 					case 2:
+ 						writer.Write(text);
+@@ -258,6 +_,10 @@
+ 							bb8[7] = DD2Event.DownedInvasionT3;
+ 							writer.Write(bb8);
+ 							writer.Write((sbyte)Main.invasionType);
++							if (!ModNet.AllowVanillaClients)
++							{
++								WorldIO.SendModData(writer);
++							}
+ 							if (SocialAPI.Network != null)
+ 							{
+ 								writer.Write(SocialAPI.Network.GetLobbyId());
+@@ -438,7 +_,10 @@
+ 									}
+ 									if (tile.wall > 0)
+ 									{
+-										writer.Write(tile.wall);
++										if (ModNet.AllowVanillaClients)
++											writer.Write((byte)tile.wall);
++										else
++											writer.Write(tile.wall);
+ 									}
+ 									if (tile.liquid > 0 && Main.netMode == 2)
+ 									{
+@@ -465,6 +_,7 @@
+ 								value = (short)item2.netID;
+ 							}
+ 							writer.Write(value);
++							ItemIO.SendModData(item2, writer);
+ 							break;
+ 						}
+ 					case 22:
+@@ -532,6 +_,7 @@
+ 							{
+ 								writer.Write((byte)nPC.releaseOwner);
+ 							}
++							NPCLoader.SendExtraAI(nPC, writer);
+ 							break;
+ 						}
+ 					case 24:
+@@ -578,10 +_,11 @@
+ 									bb15[num11] = true;
+ 								}
+ 							}
+-							if (projectile.type > 0 && projectile.type < 714 && ProjectileID.Sets.NeedsUUID[projectile.type])
++							if (projectile.type > 0 && ProjectileID.Sets.NeedsUUID[projectile.type])
+ 							{
+ 								bb15[Projectile.maxAI] = true;
+ 							}
++							byte[] extraAI = ProjectileLoader.SendExtraAI(projectile, ref bb15);
+ 							writer.Write(bb15);
+ 							for (int num12 = 0; num12 < Projectile.maxAI; num12++)
+ 							{
+@@ -589,6 +_,11 @@
+ 								{
+ 									writer.Write(projectile.ai[num12]);
+ 								}
++							}
++							if (bb15[Projectile.maxAI + 1])
++							{
++								writer.Write((byte)extraAI.Length);
++								writer.Write(extraAI);
+ 							}
+ 							if (bb15[Projectile.maxAI])
+ 							{
+@@ -628,6 +_,7 @@
+ 							writer.Write((short)item3.stack);
+ 							writer.Write(item3.prefix);
+ 							writer.Write(value3);
++							ItemIO.SendModData(item3, writer);
+ 							break;
+ 						}
+ 					case 33:
+@@ -677,6 +_,10 @@
+ 						else
+ 						{
+ 							writer.Write((short)0);
++						}
++						if (number >= 100)
++						{
++							writer.Write((ushort)number6);
+ 						}
+ 						break;
+ 					case 35:
+@@ -692,6 +_,10 @@
+ 							writer.Write(player4.zone2);
+ 							writer.Write(player4.zone3);
+ 							writer.Write(player4.zone4);
++							if (!ModNet.AllowVanillaClients)
++							{
++								PlayerHooks.SendCustomBiomes(player4, writer);
++							}
+ 							break;
+ 						}
+ 					case 38:
+@@ -753,7 +_,10 @@
+ 						writer.Write((byte)number);
+ 						for (int num16 = 0; num16 < 22; num16++)
+ 						{
+-							writer.Write((byte)Main.player[number].buffType[num16]);
++							if (ModNet.AllowVanillaClients)
++								writer.Write((byte)Main.player[number].buffType[num16]);
++							else
++								writer.Write((ushort)Main.player[number].buffType[num16]);
+ 						}
+ 						break;
+ 					case 51:
+@@ -767,20 +_,29 @@
+ 						break;
+ 					case 53:
+ 						writer.Write((short)number);
+-						writer.Write((byte)number2);
++						if (ModNet.AllowVanillaClients)
++							writer.Write((byte)number2);
++						else
++							writer.Write((ushort)number2);
+ 						writer.Write((short)number3);
+ 						break;
+ 					case 54:
+ 						writer.Write((short)number);
+ 						for (int num17 = 0; num17 < 5; num17++)
+ 						{
+-							writer.Write((byte)Main.npc[number].buffType[num17]);
++							if (ModNet.AllowVanillaClients)
++								writer.Write((byte)Main.npc[number].buffType[num17]);
++							else
++								writer.Write((ushort)Main.npc[number].buffType[num17]);
+ 							writer.Write((short)Main.npc[number].buffTime[num17]);
+ 						}
+ 						break;
+ 					case 55:
+ 						writer.Write((byte)number);
+-						writer.Write((byte)number2);
++						if (ModNet.AllowVanillaClients)
++							writer.Write((byte)number2);
++						else
++							writer.Write((ushort)number2);
+ 						writer.Write((int)number3);
+ 						break;
+ 					case 56:
+@@ -1542,7 +_,7 @@
+ 			int num5 = 0;
+ 			int num6 = 0;
+ 			byte b = 0;
+-			byte[] array4 = new byte[13];
++			byte[] array4 = new byte[ModNet.AllowVanillaClients ? 13 : 14];
+ 			Tile tile = null;
+ 			for (int i = yStart; i < yStart + height; i++)
+ 			{
+@@ -1590,7 +_,7 @@
+ 								num5++;
+ 								b |= 32;
+ 							}
+-							if (tile2.type == 21 && tile2.frameX % 36 == 0 && tile2.frameY % 36 == 0)
++							if (TileLoader.IsChest(tile2.type) && tile2.frameX % 36 == 0 && tile2.frameY % 36 == 0)
+ 							{
+ 								short num7 = (short)Chest.FindChest(j, i);
+ 								if (num7 != -1)
+@@ -1599,7 +_,7 @@
+ 									num += 1;
+ 								}
+ 							}
+-							if (tile2.type == 88 && tile2.frameX % 54 == 0 && tile2.frameY % 36 == 0)
++							if (TileLoader.IsDresser(tile2.type) && tile2.frameX % 54 == 0 && tile2.frameY % 36 == 0)
+ 							{
+ 								short num8 = (short)Chest.FindChest(j, i);
+ 								if (num8 != -1)
+@@ -1684,7 +_,17 @@
+ 						if (tile2.wall != 0)
+ 						{
+ 							b |= 4;
+-							array4[num5] = tile2.wall;
++							if (ModNet.AllowVanillaClients)
++							{
++								array4[num5] = (byte) tile2.wall;
++							}
++							else
++							{
++								byte[] wallBytes = BitConverter.GetBytes(tile2.wall);
++								array4[num5] = wallBytes[0];
++								num5++;
++								array4[num5] = wallBytes[1];
++							}
+ 							num5++;
+ 							if (tile2.wallColor() != 0)
+ 							{
+@@ -1920,7 +_,7 @@
+ 						}
+ 						if ((b3 & 4) == 4)
+ 						{
+-							tile.wall = reader.ReadByte();
++							tile.wall = ModNet.AllowVanillaClients ? reader.ReadByte() : reader.ReadUInt16();
+ 							if ((b & 16) == 16)
+ 							{
+ 								tile.wallColor(reader.ReadByte());
+@@ -2407,6 +_,7 @@
+ 				{
+ 					NetMessage.SendData(5, toWho, fromWho, "", plr, (float)(58 + Main.player[plr].armor.Length + Main.player[plr].dye.Length + Main.player[plr].miscEquips.Length + 1 + m), (float)Main.player[plr].miscDyes[m].prefix, 0f, 0, 0, 0);
+ 				}
++				PlayerHooks.SyncPlayer(Main.player[plr], toWho, fromWho, false);
+ 				if (!Netplay.Clients[plr].IsAnnouncementCompleted)
+ 				{
+ 					Netplay.Clients[plr].IsAnnouncementCompleted = true;
+

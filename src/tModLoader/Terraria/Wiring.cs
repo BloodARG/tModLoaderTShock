@@ -6,6 +6,8 @@ using Terraria.GameContent.Events;
 using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Terraria
 {

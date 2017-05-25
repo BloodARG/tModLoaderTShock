@@ -1,0 +1,55 @@
+{
+  "Emotes": [
+    {
+      "UniqueName": "Happy",
+      "RegexPattern": "[:;=][,.'^o-]?[)D]",
+      "ChatCommands": "happy,smile,laugh,lol",
+      "EmoteID": 15
+    },
+    {
+      "UniqueName": "Heart",
+      "RegexPattern": "<3",
+      "ChatCommands": "love,<3",
+      "EmoteID": 0
+    },
+    {
+      "UniqueName": "Kissy",
+      "RegexPattern": "[:;=][,.'^o-]?\\*",
+      "ChatCommands": "kiss",
+      "EmoteID": 88
+    },
+    {
+      "UniqueName": "Sleepy",
+      "RegexPattern": "[zZ]{3,5}",
+      "ChatCommands": "sleep,sleepy,zzz",
+      "EmoteID": 89
+    },
+    {
+      "UniqueName": "Confused",
+      "RegexPattern": "\\?{2,5}",
+      "ChatCommands": "confused,???",
+      "EmoteID": 87
+    },
+    {
+      "UniqueName": "Angry",
+      "RegexPattern": "[D>\\]][:;=][,.'^0-]?[\\(<\\/]",
+      "ChatCommands": "angry,grumpy,anger",
+      "EmoteID": 1
+    },
+    {
+      "UniqueName": "Cry",
+      "RegexPattern": "(?>[:=][,'][\\(\\/])|(?>[T;][-_][T;])",
+      "ChatCommands": "cry,sad",
+      "EmoteID": 2
+    },
+    {
+      "UniqueName": "Rip",
+      "RegexPattern": "^[Rr][Ii][Pp]$",
+      "ChatCommands": "rip",
+      "EmoteID": 84
+    }
+  ],
+  "HelpText": [
+    "Emote plugin: say phrases to trigger emotes!"
+  ]
+}

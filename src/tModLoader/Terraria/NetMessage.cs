@@ -1,8 +1,9 @@
-using Ionic.Zlib;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System;
 using System.IO;
+using System.IO.Compression;
 using Terraria.DataStructures;
 using Terraria.GameContent.Events;
 using Terraria.GameContent.Tile_Entities;

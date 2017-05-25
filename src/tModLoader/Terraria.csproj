@@ -102,12 +102,10 @@
       <HintPath>..\..\solutions\ReleaseExtras\Microsoft.Xna.Framework.Xact.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression">
-      <HintPath>..\..\..\..\tshock general devel tmod\TShock-general-devel\TerrariaServerAPI\bin\x64\Debug\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\Desktop\TMODLOADER PORRA BIRRL 666\TShock-general-devel\TerrariaServerAPI\bin\Debug\System.IO.Compression.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression.FileSystem">
-      <HintPath>..\..\..\..\tshock general devel tmod\TShock-general-devel\TerrariaServerAPI\bin\x64\Debug\System.IO.Compression.FileSystem.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\Desktop\TMODLOADER PORRA BIRRL 666\TShock-general-devel\TerrariaServerAPI\bin\Debug\System.IO.Compression.FileSystem.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Private>True</Private>

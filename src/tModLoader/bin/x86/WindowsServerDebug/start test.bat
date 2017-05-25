@@ -1,1 +1,1 @@
-Terraria.exe -ignoreversion 
+TerrariaServer.exe -ignoreversion 
